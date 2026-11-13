@@ -28,3 +28,5 @@ function TutorList({
     </div>
   );
 }
+
+export default memo(TutorList)

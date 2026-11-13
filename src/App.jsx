@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useMemo, useCallback } from 'react';
 import { tutors } from './data/tutors';
 import { getVisibleTutors } from './utils/catalog';
 import { useReferenceData } from './hooks/useReferenceData';
@@ -19,6 +19,8 @@ export const DEFAULT_FILTERS = {
   verifiedOnly: false,
 };
 
+const LINT_STYLE = { marginTop: 16 };
+
 export default function App() {
   const [query, setQuery] = useState('');
   const [filters, setFilters] = useState(DEFAULT_FILTERS);
@@ -31,9 +33,21 @@ export default function App() {
   const visible = getVisibleTutors(tutors, { query, filters, sortBy });
   const selected = tutors.find((t) => t.id === selectedId);
 
-  const toggleFavorite = (id) => {
+  const toggleFavorite = useCallback((id) => {
     setFavorites((prev) => (prev.includes(id) ? prev.filter((x) => x !== id) : [...prev, id]));
-  };
+  },[setFavorites]);
+
+  const handleSelect = useCallback((id) => {
+    setSelectedId(id);
+  }, []);
+
+  const handleFiltersChange = useCallback((patch) => {
+    setFilters((prev) => ({ ...prev, ...patch }));
+  }, []);
+
+  const handleFiltersReset = useCallback(() => {
+    setFilters(DEFAULT_FILTERS);
+  }, []);
 
   const book = (tutor) => {
     setToast(`Заявку для ${tutor.name} надіслано. Репетитор зв'яжеться з вами найближчим часом.`);
@@ -48,8 +62,8 @@ export default function App() {
           filters={filters}
           reference={reference}
           tutors={tutors}
-          onChange={(patch) => setFilters({ ...filters, ...patch })}
-          onReset={() => setFilters(DEFAULT_FILTERS)}
+          onChange={handleFiltersChange}
+          onReset={handleFiltersReset}
         />
         <section className="results">
           <SearchBar
@@ -66,9 +80,9 @@ export default function App() {
               tutors={visible}
               favorites={favorites}
               selectedId={selectedId}
-              onSelect={(id) => setSelectedId(id)}
+              onSelect={handleSelect}
               onToggleFavorite={toggleFavorite}
-              style={{ marginTop: 16 }}
+              style={LINT_STYLE}
             />
           )}
         </section>
