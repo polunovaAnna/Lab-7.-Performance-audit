@@ -30,7 +30,9 @@ export default function App() {
   const [toast, setToast] = useState(null);
   const reference = useReferenceData();
 
-  const visible = getVisibleTutors(tutors, { query, filters, sortBy });
+  const visible = useMemo(() => {
+    return getVisibleTutors(tutors, { query, filters, sortBy });
+  }, [query, filters, sortBy]);
   const selected = tutors.find((t) => t.id === selectedId);
 
   const toggleFavorite = useCallback((id) => {
