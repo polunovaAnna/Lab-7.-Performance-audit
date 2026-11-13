@@ -16,7 +16,7 @@ export default function Header({ favoritesCount, total }) {
         </span>
       </div>
       <div className="hero">
-        <img className="hero__image" src="/images/hero.png" alt="Учні на занятті з репетитором" loading="eager"/>
+        <img className="hero__image" src="/images/hero.webp" alt="Учні на занятті з репетитором" width="1600" height="600" loading="eager"/>
         <div className="hero__text">
           <h1>Знайдіть свого репетитора</h1>
           <p>
